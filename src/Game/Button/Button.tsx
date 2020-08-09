@@ -6,13 +6,11 @@ interface ButtonProps {
     x: number;
     y: number;
     activeButtonId: number;
-    setActiveButtonId: (id: number) => void;
-    currentScore: number;
-    setCurrentScore: (currentScore: number) => void;
+    onButtonPressed: () => void;
     
 }
 
-export const Button: FunctionComponent<ButtonProps> = ({ id, x, y, activeButtonId, setActiveButtonId, currentScore, setCurrentScore }) => {
+export const Button: FunctionComponent<ButtonProps> = ({ id, x, y, activeButtonId, onButtonPressed}) => {
 
 
     const isActive = id === activeButtonId;
@@ -25,9 +23,9 @@ export const Button: FunctionComponent<ButtonProps> = ({ id, x, y, activeButtonI
 
     const buttonClicked = (): void => {
         if(isActive) {
-            const nextButton = Math.floor(Math.random() * 8);
-            setActiveButtonId(nextButton);
-            setCurrentScore(currentScore + 1)
+            onButtonPressed();
+       
+            
         }
     }
 
