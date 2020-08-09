@@ -1,45 +1,44 @@
 ﻿import React, {FunctionComponent, useState} from "react";
 import styles from "./Board.module.scss";
 import {Button} from "../Button/Button";
-import {GameMode} from "../../App";
+
+
+const buttonPositions = [
+    { x: 150, y: 300 },
+    { x: 150, y: 1000 },
+    { x: 150, y: 1700 },
+    { x: 850, y: 300 },
+    { x: 850, y: 1000 },
+    { x: 850, y: 1700 },
+    { x: 500, y: 650 },
+    { x: 500, y: 1350 },
+]
 
 interface BoardProps {
-    currentScore: number;
-    setCurrentScore: (currentScore:number) => void;
-    setMode: (Newmode: GameMode) => void;
+    incrementScore: () => void;
+   
 }
 
-
-export const Board: FunctionComponent <BoardProps>= ({currentScore, setCurrentScore, setMode}) => {
-
+export const Board: FunctionComponent<BoardProps> = ({ incrementScore}) => {
+    const [activeId, setActiveId] = useState(0);
     
-    const [activeButtonId, setActiveButtonId] = useState(0);
-
-    const buttonPressed = () => {
-        if (currentScore === 9) {
-            setMode("Finished")
-
-        }
-        //generates the next active button by random
-         const nextButton = Math.floor(Math.random() * 8);
-         setActiveButtonId(nextButton);
-         setCurrentScore(currentScore + 1)
+    const selectNextButton = () => {
+        const nextButtonId = Math.floor(Math.random() * buttonPositions.length);
+        setActiveId(nextButtonId);
     }
     
+    const buttonCompleted = () => {
+        incrementScore();
+        selectNextButton();
+    }
     
-
+    const buttons = buttonPositions.map(({x, y}, index) => 
+        <Button id={index} x={x} y={y} activeId={activeId} onActiveButtonPressed={buttonCompleted}/>
+    );
+    
     return (
         <svg className={styles.board} viewBox="0, 0, 1000, 2000">
-            <Button id={0} x={150} y={300} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/>
-            <Button id={1} x={150} y={1000} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/> 
-            <Button id={2} x={150} y={1700} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/>
-
-            <Button id={3} x={850} y={300} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/>
-            <Button id={4} x={850} y={1000} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/>
-            <Button id={5} x={850} y={1700} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/>
-
-            <Button id={6} x={500} y={650} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/>
-            <Button id={7} x={500} y={1350} activeButtonId={activeButtonId} onButtonPressed={buttonPressed}/>
+            {buttons}
         </svg>
     );
 };

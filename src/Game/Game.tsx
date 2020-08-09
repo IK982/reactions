@@ -1,17 +1,26 @@
 ﻿import React, {FunctionComponent, useState} from "react";
 import styles from "./Game.module.scss";
 import {Board} from "./Board/Board";
-import {GameMode} from "../App"
+import {ScoreBoard} from "./ScoreBoard/ScoreBoard";
 
-interface GameProps{
-    setMode: (mode: GameMode)=> void;
+interface GameProps {
+    endGame: () => void;
 }
-export const Game: FunctionComponent <GameProps> = ({setMode}) => {
-    const [currentScore, setCurrentScore] = useState(0);
+
+export const Game: FunctionComponent<GameProps> = ({endGame}) => {
+    const [score, setScore] = useState(0);
+    
+    const incrementScore = () => {
+        if (score >= 90) {
+            endGame();
+        }
+        setScore(score + 10);
+    }
+    
     return (
         <section className={styles.content}>
-            <h1>{currentScore}</h1>
-            <Board currentScore={currentScore} setCurrentScore={setCurrentScore} setMode={setMode}/>
+            <ScoreBoard score={score}/>
+            <Board incrementScore={incrementScore}/>
         </section>
     );
 };
